@@ -9,7 +9,6 @@ const errorHandler = require('./middleware/error');
 const connectDB = require('./config/db');
 const importStockSeedData = require('./bootstrap/stock-data');
 const runStockCron = require('./background-processes/stockCron');
-
 // Load env vars
 dotenv.config({ path: './config/config.env' });
 

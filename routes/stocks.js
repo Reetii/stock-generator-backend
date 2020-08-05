@@ -1,22 +1,26 @@
 const express = require('express');
 const {
     getCurentPrice,
-    getStocks
+    getStocks,
+    getAggregatedStocks
 } = require('../controllers/stocks');
 
 
 
 const router = express.Router();
 
+router
+    .route('')
+    .get(getStocks);
 
-
+router
+    .route('/aggregated-data')
+    .get(getAggregatedStocks);
 
 router
     .route('/:stockId')
     .get(getCurentPrice);
 
-router
-    .route('')
-    .get(getStocks);
+
 
 module.exports = router;

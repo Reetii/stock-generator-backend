@@ -104,5 +104,31 @@ exports.getStocks = asyncHandler(async (req, res, next) => {
     res.status(200).json({ success: true, data: stockInfo });
 
 });
+exports.getAggregatedStocks = asyncHandler(async (req, res, next) => {
+    const params = {sort: {}, searchParams: {}};
+    const queryParams = req.query;
+    let query = [];
+
+    query.push(
+        {$project: {_id: 1, companyName: 1, currentPrice: 1, stockPrice: {$slice: ["$stockPrices", -1]}}}, //gets the latest price of every stock
+        {$unwind: "$stockPrice"},
+        {
+            $addFields: {
+                percentageChange: { $multiply: [{$divide: [{$subtract: ["$stockPrice.close", "$stockPrice.open"]}, "$stockPrice.close"]}, 100]}
+            } //Top gainers are calculated by (current price - opening price)/opening price
+
+        }
+
+
+
+
+    );
+
+    let stockInfo = await Stock.aggregate(query);
+
+
+    res.status(200).json({success: true, data: stockInfo});
+
+});
 
 
